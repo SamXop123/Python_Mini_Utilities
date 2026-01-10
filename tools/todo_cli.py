@@ -68,7 +68,7 @@ def main():
         print("1. View tasks")
         print("2. Add task") 
         print("3. Delete task")
-        print("4. Mark task")  # ← NEW!
+        print("4. Mark Done")  
         print("5. Exit")
         print("="*25)
 
