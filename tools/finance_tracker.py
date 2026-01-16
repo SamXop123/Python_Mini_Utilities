@@ -1,4 +1,5 @@
 import json
+import csv
 import os
 from datetime import datetime
 from collections import defaultdict
@@ -21,7 +22,18 @@ class FinanceTracker:
     def add_transaction(self):
         print("\n=== Add Transaction ===")
         t_type = input("Type (income/expense): ").lower()
-        amount = float(input("Amount: $"))
+        
+        # Validate amount input
+        while True:
+            try:
+                amount = float(input("Amount: $"))
+                if amount <= 0:
+                    print("❌ Amount must be greater than 0. Please try again.")
+                    continue
+                break
+            except ValueError:
+                print("❌ Invalid amount. Please enter a valid number.")
+        
         desc = input("Description: ")
         category = input("Category: ")
         date = input("Date (YYYY-MM-DD) or Enter for today: ") or datetime.now().strftime("%Y-%m-%d")
@@ -71,8 +83,29 @@ class FinanceTracker:
     def add_goal(self):
         print("\n=== Add Savings Goal ===")
         name = input("Goal name: ")
-        target = float(input("Target amount: $"))
-        current = float(input("Current amount: $") or "0")
+        
+        # Validate target amount input
+        while True:
+            try:
+                target = float(input("Target amount: $"))
+                if target <= 0:
+                    print("❌ Target amount must be greater than 0. Please try again.")
+                    continue
+                break
+            except ValueError:
+                print("❌ Invalid target amount. Please enter a valid number.")
+        
+        # Validate current amount input
+        while True:
+            current_input = input("Current amount: $") or "0"
+            try:
+                current = float(current_input)
+                if current < 0:
+                    print("❌ Current amount cannot be negative. Please try again.")
+                    continue
+                break
+            except ValueError:
+                print("❌ Invalid current amount. Please enter a valid number.")
         
         # Update existing or add new
         for goal in self.data["goals"]:
@@ -105,10 +138,11 @@ class FinanceTracker:
     
     def export_csv(self):
         filename = f"finance_{datetime.now().strftime('%Y%m%d')}.csv"
-        with open(filename, 'w') as f:
-            f.write("Date,Type,Category,Description,Amount\n")
+        with open(filename, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(["Date", "Type", "Category", "Description", "Amount"])
             for t in self.data["transactions"]:
-                f.write(f"{t['date']},{t['type']},{t['category']},{t['description']},{t['amount']}\n")
+                writer.writerow([t['date'], t['type'], t['category'], t['description'], t['amount']])
         print(f"✅ Exported to {filename}")
     
     def run(self):
