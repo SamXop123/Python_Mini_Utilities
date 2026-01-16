@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Text File Analyzer - Analyze text files for readability, word frequency, and statistics.
 Works with .txt, .md, .py, .js, .html, and other text-based files.
@@ -10,14 +9,16 @@ import math
 from collections import Counter
 import sys
 
+
 class TextAnalyzer:
     def __init__(self, filepath):
         self.filepath = filepath
         self.content = ""
         self.stats = {}
     
+
+    # Load and read the text file
     def load_file(self):
-        """Load and read the text file"""
         try:
             with open(self.filepath, 'r', encoding='utf-8') as f:
                 self.content = f.read()
@@ -29,22 +30,26 @@ class TextAnalyzer:
             print(f"❌ Error: Cannot read '{self.filepath}'. Not a text file.")
             return False
     
+
+    # Count total words in the text
     def count_words(self):
-        """Count total words in the text"""
         words = re.findall(r'\b\w+\b', self.content.lower())
         return len(words)
     
+
+    # Count characters (excluding spaces)
     def count_characters(self):
-        """Count characters (excluding spaces)"""
         return len(self.content.replace(' ', ''))
     
+
+    # Count sentences by looking for sentence endings
     def count_sentences(self):
-        """Count sentences by looking for sentence endings"""
         sentences = re.split(r'[.!?]+', self.content)
         return len([s for s in sentences if s.strip()])
     
+
+    # Calculate estimated reading time (200 words per minute)
     def calculate_reading_time(self, word_count):
-        """Calculate estimated reading time (200 words per minute)"""
         minutes = word_count / 200
         if minutes < 1:
             return "< 1 minute"
@@ -55,8 +60,9 @@ class TextAnalyzer:
             mins = int(minutes % 60)
             return f"{hours}h {mins}m"
     
+
+    # Calculate Flesch-Kincaid readability score
     def calculate_readability(self):
-        """Calculate Flesch-Kincaid readability score"""
         if not self.content.strip():
             return 0
         
@@ -77,8 +83,9 @@ class TextAnalyzer:
         
         return max(0, min(100, score))
     
+
+    # Simple syllable counting algorithm
     def count_syllables(self, word):
-        """Simple syllable counting algorithm"""
         word = word.lower()
         vowels = "aeiouy"
         syllable_count = 0
@@ -96,8 +103,9 @@ class TextAnalyzer:
         
         return max(1, syllable_count)
     
+
+    # Convert readability score to reading level
     def get_reading_level(self, score):
-        """Convert readability score to reading level"""
         if score >= 90:
             return "5th grade"
         elif score >= 80:
@@ -115,8 +123,9 @@ class TextAnalyzer:
         else:
             return "College level"
     
+
+    # Get most common words (excluding common stop words)
     def get_word_frequency(self, top_n=10):
-        """Get most common words (excluding common stop words)"""
         stop_words = {
             'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
             'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been',
@@ -130,8 +139,8 @@ class TextAnalyzer:
         
         return Counter(filtered_words).most_common(top_n)
     
+
     def get_file_size(self):
-        """Get file size in human readable format"""
         size = os.path.getsize(self.filepath)
         for unit in ['B', 'KB', 'MB', 'GB']:
             if size < 1024:
@@ -139,8 +148,9 @@ class TextAnalyzer:
             size /= 1024
         return f"{size:.1f} TB"
     
+
+    """Perform complete text analysis"""
     def analyze(self):
-        """Perform complete text analysis"""
         if not self.load_file():
             return False
         
@@ -167,8 +177,8 @@ class TextAnalyzer:
         
         return True
     
+
     def display_results(self):
-        """Display analysis results in a formatted way"""
         if not self.stats:
             return
         
@@ -191,6 +201,7 @@ class TextAnalyzer:
         
         print("="*50)
 
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: python text_analyzer.py <file_path>")
@@ -209,6 +220,7 @@ def main():
         analyzer.display_results()
     else:
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
