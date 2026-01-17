@@ -1,25 +1,23 @@
 def count_words(text):
     """
-    Counts the number of words and characters in the given text.
-
-    Parameters:
-        text (str): Input text provided by the user
-
-    Returns:
-        tuple: (word_count, character_count)
+    Counts the number of words and characters (excluding extra spaces)
+    in the given text.
     """
 
-    # Remove leading/trailing spaces
-    cleaned_text = text.strip()
-
     # Handle empty input
-    if not cleaned_text:
+    if not text.strip():
         return 0, 0
 
-    # Split text into words
+    # Clean text: remove leading/trailing spaces
+    cleaned_text = text.strip()
+
+    # Count words
     words = cleaned_text.split()
 
-    return len(words), len(text)
+    # Count characters (excluding extra spaces at start/end)
+    character_count = len(cleaned_text)
+
+    return len(words), character_count
 
 
 if __name__ == "__main__":
@@ -27,8 +25,5 @@ if __name__ == "__main__":
 
     word_count, char_count = count_words(text)
 
-    if word_count == 0:
-        print("No words entered.")
-    else:
-        print(f"Words: {word_count}")
-        print(f"Characters: {char_count}")
+    print(f"Words: {word_count}")
+    print(f"Characters (excluding extra spaces): {char_count}")
